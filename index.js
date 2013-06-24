@@ -11,7 +11,7 @@ var SaveInvalid = module.exports = function(Model) {
     if(typeof skipValidations == 'boolean') {
       fn = args.pop() || noop;
     } else {
-      fn = skipValidations;
+      fn = skipValidations || noop;
       skipValidations = false;
     }
 
