@@ -7,7 +7,7 @@ Skip those pesky validations, sometimes.
 This plugin overloads `model.save` to the following signature: `model.save([skipValidations], cb)`. With out a boolean as
 the first argument, the behavior is identical to `modella`'s default.
 
-With the additional flag, it will skip validations. Optionally if `SaveInvalid.invalidAttr` is set, an invalid model will have
+With the additional flag, it will skip validations. Optionally if `SaveInvalid.invalidAttr`  or `SaveInvalid.completeAttr` is set, an invalid model will have
 that attribute persisted as well. This is useful so that you can only query for valid models. E.g:
 
     var validTasks = Tasks.all({invalid: false}, function(err, tasks) {
@@ -19,6 +19,7 @@ that attribute persisted as well. This is useful so that you can only query for 
     var SaveInvalid = require('modella-save-invalid');
 
     SaveInvalid.invalidAttr = 'invalid' // Optional, will persist the status into the database
+    SaveInvalid.completeAttr = 'complete' // Optional, will persist the status into the database, inverse of invalid.
 
     User.use(SaveInvalid); // Assume some model w/ validations.
 

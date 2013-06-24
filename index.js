@@ -23,9 +23,11 @@ var SaveInvalid = module.exports = function(Model) {
 
     if (!this.isValid()) {
       if(skipValidations) {
-        if(SaveInvalid.invalidAttr) {
+        if(SaveInvalid.invalidAttr)
           this.attrs[SaveInvalid.invalidAttr] = true;
-        }
+
+        if(SaveInvalid.completeAttr)
+          this.attrs[SaveInvalid.completeAttr] = false;
       } else {
         this.primary(null);
         return fn(new Error('validation failed'));
@@ -33,6 +35,8 @@ var SaveInvalid = module.exports = function(Model) {
     } else {
       if(SaveInvalid.invalidAttr)
         this.attrs[SaveInvalid.invalidAttr] = false;
+      if(SaveInvalid.completeAttr)
+        this.attrs[SaveInvalid.completeAttr] = true;
     }
 
     this.run('saving', function() {
