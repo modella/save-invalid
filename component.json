@@ -1,0 +1,12 @@
+{
+  "name": "modella-save-invalid",
+  "version": "0.1.0",
+  "repo": "modella/save-invalid",
+  "description": "Adds method to persist models w/o validations",
+  "dependencies": {
+  },
+  "scripts": [
+    "index.js"
+  ]
+}
+
