@@ -7,7 +7,7 @@ var SaveInvalid = module.exports = function(Model) {
         save = this.model._sync.save,
         fn, skipValidations;
 
-    skipValidations = args.pop();
+    skipValidations = args.shift();
     if(typeof skipValidations == 'boolean') {
       fn = args.pop() || noop;
     } else {
