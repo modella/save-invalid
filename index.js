@@ -5,6 +5,7 @@ var SaveInvalid = module.exports = function(Model) {
     var args = [].slice.call(arguments),
         self = this,
         save = this.model._sync.save,
+        isNew = this.isNew(),
         fn, skipValidations;
 
     skipValidations = args.shift();
@@ -15,7 +16,7 @@ var SaveInvalid = module.exports = function(Model) {
       skipValidations = false;
     }
 
-    if (!this.isNew()) {
+    if (!isNew) {
       var changed = this.changed();
       save = this.model._sync.update;
       if(!changed) return fn(null, this);
@@ -55,8 +56,12 @@ var SaveInvalid = module.exports = function(Model) {
       }
       self.dirty = {};
       self.model.emit('save', self);
+      if(isNew) {
+        self.model.emit('create', self);
+        self.emit('create');
+      }
       self.emit('save');
-      fn();
+      fn(null, self);
     }
   };
 };
