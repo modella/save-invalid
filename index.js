@@ -4,7 +4,7 @@ var SaveInvalid = module.exports = function(Model) {
   Model.prototype.save = function(skipValidations, cb) {
     var args = [].slice.call(arguments),
         self = this,
-        save = this.model._sync.save,
+        save = this.model.save,
         isNew = this.isNew(),
         fn, skipValidations;
 
@@ -18,7 +18,7 @@ var SaveInvalid = module.exports = function(Model) {
 
     if (!isNew) {
       var changed = this.changed();
-      save = this.model._sync.update;
+      save = this.model.update;
       if(!changed) return fn(null, this);
     }
 
