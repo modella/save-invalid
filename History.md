@@ -1,4 +1,9 @@
 
+0.2.7 / 2014-02-21 
+==================
+
+ * Updated save-invalid to latest modella behavior (0.2.7)
+
 0.2.0 / 2013-11-13 
 ==================
 
