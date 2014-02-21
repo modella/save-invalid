@@ -22,6 +22,8 @@ var SaveInvalid = module.exports = function(Model) {
       if(!changed) return fn(null, this);
     }
 
+    debugger;
+
     var save = this.model[operation];
 
     if (!this.isValid()) {
@@ -43,10 +45,14 @@ var SaveInvalid = module.exports = function(Model) {
     }
 
     this.run('saving', function(err) {
-      if(err) return fn(err);
+      if(err) {
+        if(!skipValidations || err.message != 'validation failed') fn(err);
+      }
       if(isNew) {
         self.run('creating', function(err) {
-          if(err) return fn(err);
+          if(err) {
+            if(!skipValidations || err.message != 'validation failed') fn(err);
+          }
           save.apply(self, args.concat(res));
         });
       } else {
