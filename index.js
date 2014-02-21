@@ -4,7 +4,7 @@ var SaveInvalid = module.exports = function(Model) {
   Model.prototype.save = function(skipValidations, cb) {
     var args = [].slice.call(arguments),
         self = this,
-        save = this.model.save,
+        operation = 'save',
         isNew = this.isNew(),
         fn, skipValidations;
 
@@ -18,9 +18,11 @@ var SaveInvalid = module.exports = function(Model) {
 
     if (!isNew) {
       var changed = this.changed();
-      save = this.model.update;
+      operation = 'updated';
       if(!changed) return fn(null, this);
     }
+
+    var save = this.model[operation];
 
     if (!this.isValid()) {
       if(skipValidations) {
@@ -40,8 +42,16 @@ var SaveInvalid = module.exports = function(Model) {
         this.attrs[SaveInvalid.completeAttr] = true;
     }
 
-    this.run('saving', function() {
-      save.apply(self, args.concat(res));
+    this.run('saving', function(err) {
+      if(err) return fn(err);
+      if(isNew) {
+        self.run('creating', function(err) {
+          if(err) return fn(err);
+          save.apply(self, args.concat(res));
+        });
+      } else {
+        save.apply(self, args.concat(res));
+      }
     });
 
     function res(err, body) {
@@ -52,14 +62,16 @@ var SaveInvalid = module.exports = function(Model) {
 
       if (body) {
         self.primary(body.id || body._id);
-        self.set(body);
+        for(var attr in self.model.attrs) {
+          self.attrs[attr] = body[attr];
+        }
       }
       self.dirty = {};
-      self.model.emit('save', self);
       if(isNew) {
         self.model.emit('create', self);
         self.emit('create');
       }
+      self.model.emit('save', self);
       self.emit('save');
       fn(null, self);
     }
