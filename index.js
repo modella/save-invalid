@@ -18,7 +18,7 @@ var SaveInvalid = module.exports = function(Model) {
 
     if (!isNew) {
       var changed = this.changed();
-      operation = 'updated';
+      operation = 'update';
       if(!changed) return fn(null, this);
     }
 
