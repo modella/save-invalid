@@ -22,8 +22,6 @@ var SaveInvalid = module.exports = function(Model) {
       if(!changed) return fn(null, this);
     }
 
-    debugger;
-
     var save = this.model[operation];
 
     if (!this.isValid()) {
