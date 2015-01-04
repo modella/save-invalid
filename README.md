@@ -10,32 +10,35 @@ the first argument, the behavior is identical to `modella`'s default.
 With the additional flag, it will skip validations. Optionally if `SaveInvalid.invalidAttr`  or `SaveInvalid.completeAttr` is set, an invalid model will have
 that attribute persisted as well. This is useful so that you can only query for valid models. E.g:
 
-    var validTasks = Tasks.all({invalid: false}, function(err, tasks) {
-      // Do something
-    });
+```js
+var validTasks = Tasks.all({invalid: false}, function(err, tasks) {
+    // Do something
+});
+```
 
 ## Usage Example
 
-    var SaveInvalid = require('modella-save-invalid');
+```js
+var SaveInvalid = require('modella-save-invalid');
 
-    SaveInvalid.invalidAttr = 'invalid' // Optional, will persist the status into the database
-    SaveInvalid.completeAttr = 'complete' // Optional, will persist the status into the database, inverse of invalid.
+SaveInvalid.invalidAttr = 'invalid' // Optional, will persist the status into the database
+SaveInvalid.completeAttr = 'complete' // Optional, will persist the status into the database, inverse of invalid.
 
-    User.use(SaveInvalid); // Assume some model w/ validations.
+User.use(SaveInvalid); // Assume some model w/ validations.
 
 
-    var user = new User();
+var user = new User();
 
-    user.username('Bobby');
+user.username('Bobby');
+// Assume user is still invalid.
 
-    // Assume user is still invalid.
+user.save() // Will emit error and not save.
+user.save(function(err) {
+  err == undefined // Will be false
+});
 
-    user.save() // Will emit error and not save.
-    user.save(function(err) {
-      err == undefined // Will be false
-    });
-
-    user.save(true) // Will save user in db and user.invalid() will be true
-    user.save(true, function(err) {
-      err == undefined // Will be true (assuming no sync-layer errors)
-    });
+user.save(true) // Will save user in db and user.invalid() will be true
+user.save(true, function(err) {
+  err == undefined // Will be true (assuming no sync-layer errors)
+});
+```
